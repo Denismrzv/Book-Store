@@ -18,9 +18,9 @@ Route::post('/logout',function(){
     request()->session()->regenerateToken();
 })->middleware('web');
 
+    Route::get('/index',[BookController::class,'index'])->name('index');
 Route::middleware(['auth:sanctum','role:admin'])->group(function(){
-    Route::get('/index',[BookController::class,'index']);
-    Route::get('/store',[BookController::class,'store']);
-    Route::get('/update',[BookController::class,'update']);
-    Route::get('/delete',[BookController::class,'delete']); 
+    Route::post('/store',[BookController::class,'store'])->name('store');;
+    Route::patch('/update/{id}',[BookController::class,'update'])->name('update');;
+    Route::delete('/delete',[BookController::class,'delete'])->name('delete');; 
 });

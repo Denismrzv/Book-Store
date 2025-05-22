@@ -31,8 +31,9 @@ class BookController extends Controller
        
     }
 
-    public function update(UpdateBookRequest $request, $id)
+    public function update(UpdateBookRequest $request, Book $id)
     {
+        return response()->json($id);
         $request->validated();
         $updatedBook = $this->service->updateBook($request,$id);
         return response()->json($updatedBook);
