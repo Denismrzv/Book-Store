@@ -6,7 +6,7 @@ use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
 use App\Models\Book;
 use App\Services\BookService;
-
+use Illuminate\Support\Facades\Request;
 
 class BookController extends Controller
 {
@@ -20,7 +20,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::all();
-        return response()->json($books);
+        return view('index',compact('books'));
     }
     
     public function store(StoreBookRequest $request)
@@ -31,11 +31,27 @@ class BookController extends Controller
        
     }
 
-    public function update(UpdateBookRequest $request, Book $id)
+    public function show(Book $book)
     {
-        return response()->json($id);
+        return view('show',compact('book'));
+    }
+    
+
+    public function update(UpdateBookRequest $request, Book $book)
+    {
         $request->validated();
-        $updatedBook = $this->service->updateBook($request,$id);
+        return response()->json($request->all());
+        $updatedBook = $this->service->updateBook($request,$book);
         return response()->json($updatedBook);
+    }
+
+    public function delete(Request $request)
+    {
+        $ids = $request->input('ids',[]);
+        if(!$ids){
+            return response()->json('error','Не выбраны книги для удаления');
+        }
+        Book::destroy($ids);
+        return response()->json('deleted');
     }
 }
